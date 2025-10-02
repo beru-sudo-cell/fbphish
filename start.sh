@@ -98,8 +98,8 @@ TUNNEL_PID=""
 
 # Cleanup function
 cleanup() {
-    echo ""
-    echo "🛑 Shutting down services..."
+    print_status ""
+    print_status "🛑 Shutting down services..." "$GREEN"
     [ ! -z "$NODE_PID" ] && kill $NODE_PID 2>/dev/null
     [ ! -z "$TUNNEL_PID" ] && kill $TUNNEL_PID 2>/dev/null
     exit 0
@@ -108,23 +108,28 @@ cleanup() {
 # Set trap for Ctrl+C
 trap cleanup INT TERM
 
-echo "🚀 Starting Node.js server..."
+print_status "🚀 Starting Node.js server..." "$YELLOW"
 sleep 1
-echo "📍 Local:    http://localhost:3000"
+print_status "📍 Local:    http://localhost:3000" "$GREEN"
 sleep 1
-echo "🚀 Server started successfully!"
+print_status "🚀 Server started successfully!" "$GREEN"
 sleep 1
 
 # Start Cloudflare tunnel in background
-echo "🌐 Starting Cloudflare tunnel..."
+print_status "🌐 Starting Cloudflare tunnel..." "$YELLOW"
 cloudflared tunnel --url 127.0.0.1:3000 2>&1 | while IFS= read -r line; do
     if [[ "$line" == *"https://"*".trycloudflare.com"* ]]; then
-        url=$(echo "$line" | sed 's/|//g' | xargs)
-        echo "========================================"
-        echo "✅ Your app is available at:"
-        echo "   $url"
-        echo "========================================"
-
+        
+        if [[ "$line" == *"https://api.trycloudflare.com"* ]]; then
+            print_status "Something went wrong check your Internet" "$RED"
+        else
+            url=$(echo "$line" | sed 's/|//g' | xargs)
+            print_status "========================================" "$GREEN"
+            print_status "✅ Your Link is available at:" "$GREEN"
+            print_status "   $url" "$GREEN"
+            print_status "========================================" "$GREEN"
+        fi
+        
     fi
 done &
 TUNNEL_PID=$!
@@ -138,5 +143,5 @@ node server.js &
 NODE_PID=$!
 
 # Wait for both processes
-echo "Services are running. Press Ctrl+C to stop..."
+print_status "Services are running. Press Ctrl+C to stop..." "$YELLOW"
 wait
